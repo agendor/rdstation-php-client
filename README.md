@@ -1,5 +1,5 @@
 #Usage
-```
+```php
 require("RDStation.class.php");
 $rdAPI = new RDStation("RD_PRIVATE_TOKEN", "RD_TOKEN");
 
