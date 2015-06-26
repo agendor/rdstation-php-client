@@ -102,7 +102,7 @@ class RDStationAPI {
 		$this->validateToken();
 		if(empty($email)) throw new Exception("Inform at least the lead email as the first argument.");
 		if(empty($data['identificador'])) $data['identificador'] = $this->defaultIdentifier;
-        if(empty($data["client_id"]) && !empty($_COOKIE["rdtrk"])) { $data["client_id"] = json_decode($_COOKIE["rdtrk"])->{'id'};}
+        if(empty($data["client_id"]) && !empty($_COOKIE["rdtrk"])) $data["client_id"] = json_decode($_COOKIE["rdtrk"])->{'id'};
     
 		$data['email'] = $email;
 
