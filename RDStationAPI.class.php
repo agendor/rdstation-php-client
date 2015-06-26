@@ -59,7 +59,7 @@ class RDStationAPI {
 	**/
 	protected function request($method="POST", $url, $data=array()){
 
-		$data['token_rdstation'] = $this->token;
+	$data['token_rdstation'] = $this->token;
     $JSONData = json_encode($data);
     $URLParts = parse_url($url);
 
@@ -102,7 +102,8 @@ class RDStationAPI {
 		$this->validateToken();
 		if(empty($email)) throw new Exception("Inform at least the lead email as the first argument.");
 		if(empty($data['identificador'])) $data['identificador'] = $this->defaultIdentifier;
-
+        if(empty($data["client_id"]) && !empty($_COOKIE["rdtrk"])) { $data["client_id"] = json_decode($_COOKIE["rdtrk"])->{'id'};}
+    
 		$data['email'] = $email;
 
 		return $this->request("POST", $this->getURL('conversions'), $data);
