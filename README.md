@@ -1,6 +1,6 @@
 #Usage
 ```php
-require("RDStation.class.php");
+require("RDStationAPI.class.php");
 $rdAPI = new RDStation("RD_PRIVATE_TOKEN", "RD_TOKEN");
 
 //SEND NEW LEAD TO RD STATION
