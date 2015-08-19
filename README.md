@@ -1,7 +1,7 @@
 #Usage
 ```php
 require("RDStationAPI.class.php");
-$rdAPI = new RDStation("RD_PRIVATE_TOKEN", "RD_TOKEN");
+$rdAPI = new RDStationAPI("RD_PRIVATE_TOKEN", "RD_TOKEN");
 
 //SEND NEW LEAD TO RD STATION
 $return1 = $rdAPI->sendNewLead("customer@customer.com", array(
