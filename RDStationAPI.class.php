@@ -36,7 +36,7 @@ class RDStationAPI {
 	/**
 	$type:	(String) generic, leads, conversions
 	**/
-  protected function getURL($type='generic', $apiVersion='1.3'){
+  protected function getURL($type='generic', $apiVersion='1.2'){
     //(POST) https://www.rdstation.com.br/api/1.2/services/PRIVATE_TOKEN/generic //USED TO CHANGE A LEAD STATUS
 	  //(PUT) https://www.rdstation.com.br/api/1.2/leads/:lead_email //USED TO UPDATE A LEAD
 		//(POST) https://www.rdstation.com.br/api/1.2/conversions //USED TO SEND A NEW LEAD
