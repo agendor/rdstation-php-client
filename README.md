@@ -14,11 +14,13 @@ $return1 = $rdAPI->sendNewLead("customer@customer.com", array(
 
 // UPDATE ANY LEAD INFO
 $return2 = $rdAPI->updateLead("customer@customer.com", array(
-    "name" => "New Name",
-    "company"=> "Agendor",
-    "opportunity" => true,
-    "lifecycle_stage" => 1,
-    "Any Custom Field" => "Custom Field Value",
+    "lead" => array(
+      "name" => "New Name",
+      "company"=> "Agendor",
+      "opportunity" => true,
+      "lifecycle_stage" => 1,
+      "Any Custom Field" => "Custom Field Value",
+    )
 ));
 
 //UPDATE LEAD STATUS TO 'won'
