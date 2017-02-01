@@ -24,7 +24,6 @@ class RDStationAPI {
 	public $token;
 	public $privateToken;
 	public $baseURL = "https://www.rdstation.com.br/api/";
-	public $apiVersion = "1.2";
 	public $defaultIdentifier = "rdstation-php-integration";
 
 	public function __construct($privateToken=NULL, $token=NULL){
@@ -37,14 +36,14 @@ class RDStationAPI {
 	/**
 	$type:	(String) generic, leads, conversions
 	**/
-	protected function getURL($type='generic'){
-		//(POST) https://www.rdstation.com.br/api/1.2/services/PRIVATE_TOKEN/generic //USED TO CHANGE A LEAD STATUS
-		//(PUT) https://www.rdstation.com.br/api/1.2/leads/:lead_email //USED TO UPDATE A LEAD
+  protected function getURL($type='generic', $apiVersion='1.3'){
+    //(POST) https://www.rdstation.com.br/api/1.2/services/PRIVATE_TOKEN/generic //USED TO CHANGE A LEAD STATUS
+	  //(PUT) https://www.rdstation.com.br/api/1.2/leads/:lead_email //USED TO UPDATE A LEAD
 		//(POST) https://www.rdstation.com.br/api/1.2/conversions //USED TO SEND A NEW LEAD
 		switch($type){
-			case 'generic':			return $this->baseURL.$this->apiVersion."/services/".$this->privateToken."/generic";
-			case 'leads':				return $this->baseURL.$this->apiVersion."/leads/";
-			case 'conversions':	return $this->baseURL.$this->apiVersion."/conversions";
+			case 'generic':			return $this->baseURL.$apiVersion."/services/".$this->privateToken."/generic";
+			case 'leads':				return $this->baseURL.$apiVersion."/leads/";
+			case 'conversions':	return $this->baseURL.$apiVersion."/conversions";
 		}
 	}
 
@@ -73,7 +72,6 @@ class RDStationAPI {
     $out .= "Content-Length: ".strlen($JSONData)."\r\n";
     $out .= "Connection: Close\r\n\r\n";
     $out .= $JSONData;
-
     $written = fwrite($fp, $out);
     fclose($fp);
 
@@ -102,10 +100,10 @@ class RDStationAPI {
 		$this->validateToken();
 		if(empty($email)) throw new Exception("Inform at least the lead email as the first argument.");
 		if(empty($data['identificador'])) $data['identificador'] = $this->defaultIdentifier;
-        	if(empty($data["client_id"]) && !empty($_COOKIE["rdtrk"])) $data["client_id"] = json_decode($_COOKIE["rdtrk"])->{'id'};
-    		if(empty($data["traffic_source"]) && !empty($_COOKIE["__trf_src"])) $data["traffic_source"] = $_COOKIE["__trf_src"];
-    
-		$data['email'] = $email;
+    if(empty($data["client_id"]) && !empty($_COOKIE["rdtrk"])) $data["client_id"] = json_decode($_COOKIE["rdtrk"])->{'id'};
+    if(empty($data["traffic_source"]) && !empty($_COOKIE["__trf_src"])) $data["traffic_source"] = $_COOKIE["__trf_src"];
+
+    $data['email'] = $email;
 
 		return $this->request("POST", $this->getURL('conversions'), $data);
 	}
@@ -114,7 +112,11 @@ class RDStationAPI {
 	Helper function to update lead properties
 	**/
 	public function updateLead($email, $data=array()){
-		return $this->sendNewLead($email, $data);
+    $url = $this->getURL('leads', '1.3').$email;
+    $new_data['lead'] = $data;
+    $new_data['auth_token'] = $this->privateToken;
+
+		return $this->request("PUT", $url, $new_data);
 	}
 
 	/**
@@ -154,7 +156,7 @@ class RDStationAPI {
 		  "value" => $value,
 		  "lost_reason" => $lostReason,
 		);
-		
+
 		if(is_integer($emailOrLeadId)) $data["lead_id"] = $emailOrLeadId;
 		else $data["email"] = $emailOrLeadId;
 
