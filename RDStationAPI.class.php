@@ -62,8 +62,8 @@ class RDStationAPI {
     $JSONData = json_encode($data);
     $URLParts = parse_url($url);
 
-    $fp = fsockopen($URLParts['host'],
-                    isset($URLParts['port'])?$URLParts['port']:80,
+    $fp = fsockopen("tls://".$URLParts['host'],
+                    isset($URLParts['port'])?$URLParts['port']:443,
                     $errno, $errstr, 30);
 
     $out = $method." ".$URLParts['path']." HTTP/1.1\r\n";
