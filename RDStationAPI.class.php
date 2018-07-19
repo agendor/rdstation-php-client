@@ -62,12 +62,17 @@ class RDStationAPI {
     $JSONData = json_encode($data);
     $URLParts = parse_url($url);
 
-    $fp = fsockopen($URLParts['host'],
-                    isset($URLParts['port'])?$URLParts['port']:80,
-                    $errno, $errstr, 30);
-
+    if ($URLParts['scheme'] == "https") {
+        $targetHost = "tls://".$URLParts['host'];
+        $targetPort = isset($URLParts['port'])?$URLParts['port']:443;
+    } else {
+        $targetHost = $URLParts['host'];
+        $targetPort = isset($URLParts['port'])?$URLParts['port']:80;
+    }
+    $fp = fsockopen($targetHost, $targetPort, $errno, $errstr, 30);
     $out = $method." ".$URLParts['path']." HTTP/1.1\r\n";
     $out .= "Host: ".$URLParts['host']."\r\n";
+    $out .= "User-Agent: rdstation-php-client\r\n";
     $out .= "Content-Type: application/json\r\n";
     $out .= "Content-Length: ".strlen($JSONData)."\r\n";
     $out .= "Connection: Close\r\n\r\n";
